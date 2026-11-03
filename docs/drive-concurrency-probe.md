@@ -42,6 +42,8 @@ folder was verified and moved to Drive trash. No real vault was used.
 
 These are observations for one account and synthetic files, not a guarantee for
 other accounts or devices. Concurrent Drive creation is still non-atomic and may
-require manual duplicate resolution. External file writers, actual Obsidian
-Linux/Android integration, and token protection have not been validated. Do not
-use the current fork with a real vault.
+require manual duplicate resolution. The probe did not validate external file
+writers, actual Obsidian integration, or token protection. Subsequent checks
+covered an isolated Linux client and one desktop upload and update; Android and
+multi-device behavior remain unverified. Do not use the current fork with a real
+vault.

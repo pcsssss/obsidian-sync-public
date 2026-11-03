@@ -26,10 +26,13 @@ public issue. You will get a response as soon as possible.
   to Obsidian. The code is bound by PKCE to a verifier held on the device, and
   a random `state` ties the callback to the sign-in attempt. The page host can
   see the request; PKCE does not remove the need to trust that host. A copy is
-  included in `docs/oauth/` and can be hosted separately, then configured via
-  *Redirect page (advanced)*. This fork has not deployed its own redirect page.
+  included in `docs/oauth/` and hosted at
+  `https://pcsssss.github.io/obsidian-sync-public/oauth/`. Configure that URI via
+  *Redirect page (advanced)* and register it on the Google Web OAuth client to
+  use this fork's page instead.
 - **Release verification.** Upstream's 0.8.1 release matched a local build
-  during evaluation. This fork has not yet published or verified any release.
+  during evaluation. This fork's 0.8.1 development release assets were checked
+  against its local build, but have not received an independent security review.
 - **Local credentials.** New OAuth refresh tokens and HMAC keys use Obsidian
   SecretStorage; the plugin's `data.json` contains references instead of those
   values. Obsidian can silently store secrets unencrypted when no OS secret

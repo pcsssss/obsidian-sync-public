@@ -13,9 +13,10 @@ copyright and MIT license are retained in [LICENSE](LICENSE).
 
 The goal is to sync vault files between the official Obsidian apps on Linux and
 Android using a Google Drive account. The imported plugin also supports Google
-Cloud Storage. Mobile sign-in currently defaults to an upstream-hosted static
-redirect page; it can be configured to use a separately hosted page instead.
-A self-hosted mobile redirect page is not deployed by this repository.
+Cloud Storage. Mobile sign-in defaults to an upstream-hosted static redirect
+page. To use this repository's copy instead, set **Redirect page (advanced)** to
+`https://pcsssss.github.io/obsidian-sync-public/oauth/` and register the same URI
+on the Google Web OAuth client.
 
 For ordinary updates, a newer remote note or attachment should replace the
 unchanged older local copy automatically. When both copies have changed, both
@@ -57,9 +58,10 @@ both plugins in the same vault. Android setup has not yet been tested.
 ## Current limitations
 
 - Existing Drive files use version-checked v2 writes and trash requests. A live
-  probe passed against synthetic files on one account, but an Obsidian-to-Drive
-  sync has not been tested. Drive may advance file versions without an explicit
-  content edit, causing a safe retry or extra conflict copy.
+  probe passed against synthetic files on one account; one desktop upload and
+  update were also exercised. Downloads and multi-device sync are unverified.
+  Drive may advance versions without an explicit content edit, causing a safe
+  retry or extra conflict copy.
 - Drive allows duplicate file and folder names: concurrent creation is not
   atomic and can pause syncing until duplicates are resolved. Local binary
   replacement uses a recoverable backup, but Android rename/copy behavior and
