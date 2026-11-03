@@ -1,0 +1,108 @@
+import { SyncStateData } from "./sync/types";
+import type { PendingAuth } from "./providers/google/redirectLogin";
+
+/** New credentials reference Obsidian SecretStorage; older data may be plaintext or passphrase-encrypted. */
+export interface StoredSecret {
+  enc: boolean;
+  data: string;
+  kind?: "obsidian";
+}
+
+/** Default Drive folder name when the user leaves the folder field blank. */
+export const DEFAULT_APP_FOLDER = "Obsidian Sync";
+
+export interface GoogleSyncSettings {
+  // --- Google Drive backend (any Google account) ---
+  driveEnabled: boolean;
+  driveScopeLevel: "file" | "full";
+  /** Drive folder to sync into; "" → DEFAULT_APP_FOLDER. */
+  appFolderName: string;
+  driveToken: StoredSecret | null;
+  /** Protect local files: a file missing on Drive is re-uploaded, never deleted locally (local→Drive deletes still apply). */
+  driveProtectLocal: boolean;
+
+  // --- Google Cloud Storage backend (your own GCP bucket) ---
+  gcsEnabled: boolean;
+  bucket: string;
+  prefix: string;
+  /** GCS auth: OAuth Bearer (one-click default) or HMAC SigV4 (advanced — tighter scope). */
+  gcsAuthMode: "oauth" | "hmac";
+  region: string;
+  service: string;
+  accessId: string; // HMAC access id
+  gcsSecret: StoredSecret | null; // HMAC secret
+  gcsToken: StoredSecret | null; // OAuth refresh token
+  /** Protect local files: a file missing in the bucket is re-uploaded, never deleted locally (local→bucket deletes still apply). */
+  gcsProtectLocal: boolean;
+
+  // --- user-supplied OAuth client; its client secret remains in plugin settings ---
+  oauthClientId: string;
+  oauthClientSecret: string;
+  /** Phone sign-in: the redirect page Google returns to ("" = the one this repo publishes). Must match the client's registered redirect URI. */
+  oauthRedirectPage: string;
+  /** Phone sign-in waiting for its obsidian:// callback; null when none. Single-use, short-lived. */
+  pendingAuth: PendingAuth | null;
+  /**
+   * Phones this plugin was set up on (device-local ids, see main.ts). data.json can
+   * reach a phone through another tool syncing `.obsidian` (iCloud, Obsidian Sync,
+   * Syncthing); automatic sync runs only on a phone listed here. Desktop ignores it.
+   */
+  syncDevices: string[];
+
+  // --- sync behaviour ---
+  syncFolder: string; // "" = whole vault
+  autoSync: boolean;
+  autoSyncMode: "on-change" | "interval";
+  autoSyncIntervalMinutes: number;
+  /** Epoch ms of the last successful sync; null = never synced. */
+  lastSyncAt: number | null;
+  /** Per-backend last successful sync (epoch ms) — shown as info only, never used in any sync decision. */
+  backendLastSync: Record<string, number>;
+
+  // --- optional content end-to-end encryption (advanced; default off) ---
+  e2ee: boolean;
+  salt: string | null; // credential sealing only (device-local); content E2EE uses the remote header's salt
+  /** Last good E2EE header per remote folder (not secret) — restores a deleted or damaged one. */
+  e2eeHeaders: Record<string, string>;
+
+  // --- per-backend last-synced baseline, keyed by backend id ("drive" | "gcs") ---
+  syncState: Record<string, SyncStateData>;
+}
+
+export const DEFAULT_SETTINGS: GoogleSyncSettings = {
+  driveEnabled: false,
+  driveScopeLevel: "file",
+  appFolderName: DEFAULT_APP_FOLDER,
+  driveToken: null,
+  driveProtectLocal: false,
+
+  gcsEnabled: false,
+  bucket: "",
+  prefix: "",
+  gcsAuthMode: "oauth",
+  region: "auto",
+  service: "s3",
+  accessId: "",
+  gcsSecret: null,
+  gcsToken: null,
+  gcsProtectLocal: false,
+
+  oauthClientId: "",
+  oauthClientSecret: "",
+  oauthRedirectPage: "",
+  pendingAuth: null,
+  syncDevices: [],
+
+  syncFolder: "",
+  autoSync: false,
+  autoSyncMode: "interval",
+  autoSyncIntervalMinutes: 15,
+  lastSyncAt: null,
+  backendLastSync: {},
+
+  e2ee: false,
+  salt: null,
+  e2eeHeaders: {},
+
+  syncState: {},
+};

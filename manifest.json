@@ -1,0 +1,10 @@
+{
+  "id": "personal-google-sync",
+  "name": "Personal Google Sync",
+  "version": "0.8.1",
+  "minAppVersion": "1.13.0",
+  "description": "Development-only sync to your Google Drive or Google Cloud Storage account; mobile sign-in uses a configurable redirect page.",
+  "author": "Personal fork, based on Sertaç Yıldız",
+  "authorUrl": "https://github.com/sertacyildiz",
+  "isDesktopOnly": false
+}
